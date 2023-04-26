@@ -528,18 +528,15 @@ generateAOVisitDetailReports <- function(connectionDetails, cdmDatabaseSchema, r
 generateAOMetadataReport <- function(connectionDetails, cdmDatabaseSchema, outputPath)
 {
   conn <- DatabaseConnector::connect(connectionDetails)
-  if ("METADATA" %in% DatabaseConnector::getTableNames(connection = conn, databaseSchema = cdmDatabaseSchema))
-  {
-    writeLines("Generating metadata report")    
-    queryMetadata <- SqlRender::loadRenderTranslateSql(
-      sqlFilename = "export/metadata/sqlMetadata.sql",
-      packageName = "Achilles",
-      dbms = connectionDetails$dbms,
-      cdm_database_schema = cdmDatabaseSchema
-    )      
-    dataMetadata <- DatabaseConnector::querySql(conn, queryMetadata) 
-    data.table::fwrite(dataMetadata, file=paste0(outputPath, "/metadata.csv"))   
-  }
+  writeLines("Generating metadata report")
+  queryMetadata <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = "export/metadata/sqlMetadata.sql",
+    packageName = "Achilles",
+    dbms = connectionDetails$dbms,
+    cdm_database_schema = cdmDatabaseSchema
+  )
+  dataMetadata <- DatabaseConnector::querySql(conn, queryMetadata)
+  data.table::fwrite(dataMetadata, file=paste0(outputPath, "/metadata.csv"))
 }
 
 generateAOObservationReports <- function(connectionDetails, observationsData, cdmDatabaseSchema, resultsDatabaseSchema, vocabDatabaseSchema, outputPath)
@@ -620,20 +617,17 @@ generateAOObservationReports <- function(connectionDetails, observationsData, cd
 
 generateAOCdmSourceReport <- function(connectionDetails, cdmDatabaseSchema, outputPath)
 {
-  conn <- DatabaseConnector::connect(connectionDetails)  
-  if ("CDM_SOURCE" %in% DatabaseConnector::getTableNames(connection = conn, databaseSchema = cdmDatabaseSchema))
-  {
-    writeLines("Generating cdm source report")    
-    queryCdmSource <- SqlRender::loadRenderTranslateSql(
-      sqlFilename = "export/metadata/sqlCdmSource.sql",
-      packageName = "Achilles",
-      dbms = connectionDetails$dbms,
-      cdm_database_schema = cdmDatabaseSchema
-    )  
-    
-    dataCdmSource <- DatabaseConnector::querySql(conn, queryCdmSource) 
-    data.table::fwrite(dataCdmSource, file=paste0(outputPath, "/cdmsource.csv"))
-  }
+  conn <- DatabaseConnector::connect(connectionDetails)
+  writeLines("Generating cdm source report")
+  queryCdmSource <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = "export/metadata/sqlCdmSource.sql",
+    packageName = "Achilles",
+    dbms = connectionDetails$dbms,
+    cdm_database_schema = cdmDatabaseSchema
+  )
+
+  dataCdmSource <- DatabaseConnector::querySql(conn, queryCdmSource)
+  data.table::fwrite(dataCdmSource, file=paste0(outputPath, "/cdmsource.csv"))
 }
 
 generateAODashboardReport <- function(outputPath)
