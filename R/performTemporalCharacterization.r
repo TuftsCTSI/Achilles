@@ -128,6 +128,9 @@ performTemporalCharacterization <- function(
 		tempData <- temporalData[temporalData$CONCEPT_ID == conceptId,]
 		tempData.ts <- Achilles::createTimeSeries(tempData)
 		tempData.ts <- tempData.ts[,"PREVALENCE"]
+		if (length(tempData.ts) < minMonths) {
+			next
+		}
 		tempData.ts <- Achilles::tsCompleteYears(tempData.ts)
 		if (length(tempData.ts) >= minMonths) {
 			tempData.ts.ss <- Achilles::getSeasonalityScore(tempData.ts)
